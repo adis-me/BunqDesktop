@@ -2,7 +2,7 @@ import path from "path";
 import url from "url";
 import log from "electron-log";
 import settings from "electron-settings";
-import { app, Menu } from "electron";
+import electron, { app, Menu } from "electron";
 import { devMenuTemplate } from "./menu/dev_menu_template";
 import { editMenuTemplate } from "./menu/edit_menu_template";
 import createWindow from "./helpers/window";
@@ -37,6 +37,13 @@ log.transports.file.file = `${app.getPath("userData")}/BunqDesktop.log.txt`;
 
 app.on("ready", () => {
     setApplicationMenu();
+
+    electron.powerMonitor.on("suspend", () => {
+        console.log("The system is going to sleep");
+    });
+    electron.powerMonitor.on("resume", () => {
+        console.log("The system is becoming active");
+    });
 
     // set the correct path
     settings.setPath(`${app.getPath("userData")}/settings.json`);
